@@ -1,6 +1,7 @@
 /**
  * Esta clase representa un parqueadero con TAMANO puestos.
  */
+import java.util.*;
 public class Parqueadero {
 // -----------------------------------------------------------------
     // Constantes
@@ -39,7 +40,7 @@ public class Parqueadero {
     /**
      * Es la hora a la que se cierra el parqueadero.
      */
-    public static final int HORA_CIERRE = 20;
+    public static final int HORA_CIERRE = 21;
 
     /**
      * Es la tarifa inicial del parqueadero.
@@ -320,14 +321,116 @@ public class Parqueadero {
     // Puntos de Extensi�n
     // -----------------------------------------------------------------
 
+
+
+    //Metodos implementados:
+
+    //2.1
+    public double darTiempoPromedio( ) {
+        double tiempoPromedio = 0;
+        for (Puesto puesto : puestos) {
+            tiempoPromedio += puesto.darCarro().darTiempoEnParqueadero(horaActual);
+        }
+        return (tiempoPromedio/40);
+    }
+
+    //2.2
+    public Carro carroMasTiempo(){
+        Carro masTiempo=puestos[0].darCarro();
+        for (Puesto puesto : puestos) {
+            if(puesto.darCarro().darTiempoEnParqueadero(horaActual)<masTiempo.darTiempoEnParqueadero(horaActual)){
+                masTiempo=puesto.darCarro();
+            }
+        }
+        return masTiempo;
+
+    }
+
+    //2.3
+    public boolean hayCarroMasDeOchoHoras() {
+        for (Puesto puesto : puestos) {
+            if(puesto.darCarro().darTiempoEnParqueadero(horaActual)>8){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //2.4
+    public ArrayList darCarrosMasDeTresHorasParqueados( ) {
+        ArrayList tresHoras = null;
+        for (Puesto puesto : puestos) {
+            if(puesto.darCarro().darTiempoEnParqueadero(horaActual)>3){
+                tresHoras.add(puesto.darCarro());
+            }
+        }
+        return tresHoras;
+
+    }
+
+    //2.5
+    public boolean hayCarrosPlacaIgual( ) {
+        for (int i=0; i<40; i++) {
+            for (int j=0; j<40; j++){
+                if(Objects.equals(puestos[i].darCarro().darPlaca(), puestos[j].darCarro().darPlaca())&& i!=j){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    //3.1
+    public int contarCarrosQueComienzanConPlacaPB(){
+        int carrosPB=0;
+        for(Puesto puesto : puestos){
+            String primerosDosCaracteres = puesto.darCarro().darPlaca().substring(0, 2);
+            if(primerosDosCaracteres.equals("PB")){
+                carrosPB++;
+            }
+        }
+        return carrosPB;
+    }
+
+    //3.2
+    public boolean hayCarroCon24Horas( ){
+        for(Puesto puesto : puestos){
+            if(puesto.darCarro().darTiempoEnParqueadero(horaActual)>24) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //3.3
+
     /**
      * M�todo de extensi�n 1.
      * @return Respuesta 1.
      */
     public String metodo1( )
     {
-        return "respuesta 1";
+        if(hayCarroCon24Horas()){
+            return("Cantidad de carros con placa PB: "+ contarCarrosQueComienzanConPlacaPB()+" – Hay carro parqueado por 24 o más horas: Sí");
+
+        }
+
+        return "Cantidad de carros con placa PB:"+ contarCarrosQueComienzanConPlacaPB() + "– Hay carro parqueado por 24 o más horas: No";
     }
+
+    //3.4
+    public int desocuparParqueadero(){
+        int vaciados=0;
+        for(Puesto puesto : puestos){
+            if(puesto!=null){
+                vaciados++;
+                puesto=null;
+            }
+        }
+        return vaciados;
+    }
+
+    //3.5
 
     /**
      * M�todo de extensi�n 2.
@@ -335,7 +438,10 @@ public class Parqueadero {
      */
     public String metodo2( )
     {
-        return "respuesta 2";
+        return "Cantidad de carros sacados: "+ desocuparParqueadero();
     }
 
+
 }
+
+
